@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "70291564203",
+    "firebase_url": "https://remede-b04d1.firebaseio.com",
+    "project_id": "remede-b04d1",
+    "storage_bucket": "remede-b04d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70291564203:android:c9ce2ea6c7b539c6d0f9ee",
+        "android_client_info": {
+          "package_name": "com.example.remede"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70291564203-scr8h9lt53q0cs3frniduijbtdepqrjj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn4tHQEvnVAPEUHE42KnVSBgMx8GwwIa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70291564203-scr8h9lt53q0cs3frniduijbtdepqrjj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
