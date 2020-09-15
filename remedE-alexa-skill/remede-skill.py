@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 user_slot = "userName"
+medicine_slot = "medicine"
 
 app = Flask(__name__)
 
@@ -40,26 +41,6 @@ class LaunchRequestHandler(AbstractRequestHandler):
         )
 
 
-class HelloWorldIntentHandler(AbstractRequestHandler):
-    """Handler for Hello World Intent."""
-
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return ask_utils.is_intent_name("HelloWorldIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(data.HELLO_MSG)
-
-        return (
-            handler_input.response_builder
-            .speak(speak_output)
-            # .ask("add a reprompt if you want to keep the session open for the user to respond")
-            .response
-        )
-
-
 class LoginIntentHandler(AbstractRequestHandler):
     """Handler for Login Intent"""
 
@@ -75,16 +56,41 @@ class LoginIntentHandler(AbstractRequestHandler):
         if user_slot in slots:
             username = slots[user_slot].value
             Utils.get_user_key(username=username)
-            speech = "Welcome {}, good to have you on board!".format(username)
-            reprompt = "I found some medicines in your record, would you like to set a reminder for them?"
+            speech = "Welcome {}, good to have you on board! " \
+                     "I found some medicines in your record, would you like to set a " \
+                     "reminder for them?".format(username)
 
         else:
             speech = "I could not catch your name, try again please"
-            reprompt = "You can ask me to login for you by giving me your name"
 
         return (handler_input.response_builder
                 .speak(speech)
-                .ask(reprompt)
+                .ask(speech)
+                .response)
+
+
+class GetMedDataIntentHandler(AbstractRequestHandler):
+    """Handler for GetMedDataIntent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("GetMedDataIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+
+        slots = handler_input.request_envelope.request.intent.slots
+
+        if medicine_slot in slots:
+            med_name = slots[medicine_slot].value
+            med_data = Utils.get_med_json_data(med_name)
+            speech = "The generic name of " + med_name + " is " + med_data['generic_name'] + ". A brief description " \
+                     "is as stated, " + med_data['description']
+        else:
+            speech = "I could not understand the name of the medicine, try again please"
+
+        return (handler_input.response_builder
+                .speak(speech)
                 .response)
 
 
@@ -211,11 +217,12 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
-sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(LoginIntentHandler())
+sb.add_request_handler(GetMedDataIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
+
 # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 sb.add_request_handler(IntentReflectorHandler())
 
