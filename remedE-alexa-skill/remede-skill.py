@@ -1,7 +1,7 @@
-import flask_ask_sdk
 import logging
 import gettext
 from flask import Flask
+import Utils
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import (
@@ -15,26 +15,27 @@ from flask_ask_sdk.skill_adapter import SkillAdapter
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+user_slot = "userName"
+
 app = Flask(__name__)
 
 
 class LaunchRequestHandler(AbstractRequestHandler):
-    """Handler for Skill Launch."""
-
+    """Launch Request Handler"""
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
-
         return ask_utils.is_request_type("LaunchRequest")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(data.WELCOME_MESSAGE)
+        speak_output = "Welcome to remedy helper! I am here to help you adhere better to your medicines and " \
+                       "make you more self aware. You can start by telling me your name and asking me to login!"
 
         return (
             handler_input.response_builder
             .speak(speak_output)
-            .ask(speak_output)
             .response
         )
 
@@ -57,6 +58,34 @@ class HelloWorldIntentHandler(AbstractRequestHandler):
             # .ask("add a reprompt if you want to keep the session open for the user to respond")
             .response
         )
+
+
+class LoginIntentHandler(AbstractRequestHandler):
+    """Handler for Login Intent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("LoginIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+
+        slots = handler_input.request_envelope.request.intent.slots
+
+        if user_slot in slots:
+            username = slots[user_slot].value
+            Utils.get_user_key(username=username)
+            speech = "Welcome {}, good to have you on board!".format(username)
+            reprompt = "I found some medicines in your record, would you like to set a reminder for them?"
+
+        else:
+            speech = "I could not catch your name, try again please"
+            reprompt = "You can ask me to login for you by giving me your name"
+
+        return (handler_input.response_builder
+                .speak(speech)
+                .ask(reprompt)
+                .response)
 
 
 class HelpIntentHandler(AbstractRequestHandler):
@@ -183,6 +212,7 @@ sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(HelloWorldIntentHandler())
+sb.add_request_handler(LoginIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
