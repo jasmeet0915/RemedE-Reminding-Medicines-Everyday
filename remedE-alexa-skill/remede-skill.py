@@ -12,6 +12,7 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 import data
 from flask_ask_sdk.skill_adapter import SkillAdapter
+import json
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -112,6 +113,54 @@ class GetSideEffectsIntentHandler(AbstractRequestHandler):
             speech = "The side effects of " + med_name + " are " + med_data['side_effects']
         else:
             speech = "I could not understand the name of the medicine, try again please"
+
+        return (handler_input.response_builder
+                .speak(speech)
+                .response)
+
+
+class GetNextDoseIntentHandler(AbstractRequestHandler):
+    """Handler for GetNextDoseIntent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("GetNextDoseIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+
+        slots = handler_input.request_envelope.request.intent.slots
+
+        if medicine_slot in slots:
+            med_name = slots[medicine_slot].value
+            next_dose_time = Utils.get_next_dose(med_name)
+            speech = "Your upcoming dose for the medicine " + med_name + " is at " + str(next_dose_time)
+        else:
+            speech = "I was not able to find that medicine in your records please try again"
+
+        return (handler_input.response_builder
+                .speak(speech)
+                .response)
+
+
+class GetRemainingStockIntentHandler(AbstractRequestHandler):
+    """Handler for GetRemainingStockIntent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("GetRemainingStockIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+
+        slots = handler_input.request_envelope.request.intent.slots
+
+        if medicine_slot in slots:
+            med_name = slots[medicine_slot].value
+            remaining_stock = Utils.get_remaining_stock(med_name)
+            speech = "The remaining stock for your medicine "+med_name+" is "+str(remaining_stock)
+        else:
+            speech = "I could not find that medicine in your records, please try again"
 
         return (handler_input.response_builder
                 .speak(speech)
@@ -241,9 +290,13 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
+
 sb.add_request_handler(LoginIntentHandler())
 sb.add_request_handler(GetMedDataIntentHandler())
 sb.add_request_handler(GetSideEffectsIntentHandler())
+sb.add_request_handler(GetNextDoseIntentHandler())
+sb.add_request_handler(GetRemainingStockIntentHandler())
+
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())

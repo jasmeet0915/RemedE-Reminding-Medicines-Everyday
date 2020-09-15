@@ -31,13 +31,6 @@ def get_med_json_data(medicine_name):
     return data[medicine_name]
 
 
-def get_med_json_data(medname):
-    with open('assets/med_data.json', 'r') as f:
-        data = json.load(f)
-    f.close()
-    return data[medname]
-
-
 def get_user_medicine_data(med_name):
     with open("assets/user_key.json") as file:
         data = json.load(file)
@@ -66,3 +59,10 @@ def get_next_dose(med_name):
         if dose_time_iso > time_now and not taken:
             return dose_time
 
+
+def get_remaining_stock(med_name):
+    med_data_dict = get_user_medicine_data(med_name)
+    print(med_data_dict)
+    remaining_stock = med_data_dict['remaining_stock']
+    print(remaining_stock)
+    return remaining_stock
