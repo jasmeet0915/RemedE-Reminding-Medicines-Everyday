@@ -94,6 +94,30 @@ class GetMedDataIntentHandler(AbstractRequestHandler):
                 .response)
 
 
+class GetSideEffectsIntentHandler(AbstractRequestHandler):
+    """Handler for GetSideEffectsIntent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("GetSideEffectsIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+
+        slots = handler_input.request_envelope.request.intent.slots
+
+        if medicine_slot in slots:
+            med_name = slots[medicine_slot].value
+            med_data = Utils.get_med_json_data(med_name)
+            speech = "The side effects of " + med_name + " are " + med_data['side_effects']
+        else:
+            speech = "I could not understand the name of the medicine, try again please"
+
+        return (handler_input.response_builder
+                .speak(speech)
+                .response)
+
+
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -219,6 +243,7 @@ sb = SkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(LoginIntentHandler())
 sb.add_request_handler(GetMedDataIntentHandler())
+sb.add_request_handler(GetSideEffectsIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
