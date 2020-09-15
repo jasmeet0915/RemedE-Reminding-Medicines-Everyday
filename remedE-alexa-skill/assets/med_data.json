@@ -1,0 +1,58 @@
+{
+	"singulair":{
+		"generic_name": "montelukast",
+		"description": "Singulair is used to prevent asthma attacks in adults and children as young as 12 months old. Singulair is also used to prevent exercise-induced bronchoconstriction (narrowing of the air passages in the lungs) in adults and children who are at least 6 years old. Singulair is also used to treat symptoms of year-round (perennial) allergies in adults and children who are at least 6 months old. It is also used to treat symptoms of seasonal allergies in adults and children who are at least 2 years old",
+		"side_effects": "anger, aggression, feeling restless or irritable:agitation, anxiety,depression, confusion, problems with memory or attention:hallucinations, sleep problems, strange dreams, sleep-walking"
+	},
+	"atrovent":{
+		"generic_name": "ipratropium",
+		"description": "Ipratropium is used to help control the symptoms of lung diseases, such as asthma, chronic bronchitis, and emphysema. It is also used to treat air flow blockage and prevent the worsening of chronic obstructive pulmonary disease (COPD). Ipratropium belongs to the family of medicines known as bronchodilators. Bronchodilators are medicines that are breathed in through the mouth to open up the bronchial tubes (air passages) in the lungs. This medicine is available only with your doctor's prescription.",
+		"side_effects": "Bladder pain:bloody or cloudy urine:cough producing mucus:difficulty with breathing:frequent urge to urinate"
+	},
+	"fortamet":{
+		"generic_name": "metformin",
+		"description": "Metformin is an oral diabetes medicine that helps control blood sugar levels. Metformin is used together with diet and exercise to improve blood sugar control in adults with type 2 diabetes mellitus. Metformin is sometimes used together with insulin or other medications, but it is not for treating type 1 diabetes.",
+		"side_effects":"unusual muscle pain:feeling cold:trouble breathing:stomach pain, vomiting"
+	},
+	"victoza":{
+		"generic_name": "liraglutide",
+		"description": "Victoza (liraglutide) is similar to a hormone that occurs naturally in the body and helps control blood sugar, insulin levels, and digestion. Victoza is used together with diet and exercise to improve blood sugar control in adults and children 10 years of age and older with type 2 diabetes mellitus. Victoza may also help reduce the risk of serious heart problems such as heart attack or stroke in adults with type 2 diabetes and heart disease. It is usually given after other diabetes medicines have been tried without success. Victoza is not for treating type 1 diabetes.",
+		"side_effects":"racing or pounding heartbeats:severe ongoing nausea, vomiting, or diarrhea:swelling or a lump in your neck, trouble swallowing, a hoarse voice, feeling short of breath:fever, upper stomach pain, clay-colored stools, jaundice (yellowing of your skin or eyes)"
+	},
+	"admelog":{
+		"generic_name": "insulin lispro",
+		"description": "Insulin lispro is used to improve blood sugar control in adults and children with diabetes mellitus. Admelog and HumaLOG are used to treat type 2 diabetes in adults, or type 1 diabetes in adults and children who are at least 3 years old.",
+		"side_effects":"weight gain, swelling in your hands or feet, feeling short of breath:low blood sugar--headache, hunger, sweating, irritability, dizziness, fast heart rate, and feeling anxious or shaky:irregular heartbeats, fluttering in your chest, increased thirst or urination, numbness or tingling, muscle weakness or limp feeling:thickening or hollowing of the skin where you injected the medicine"
+	},
+	"glucotrol":{
+		"generic_name": "glipizide",
+		"description": "Glucotrol (glipizide) is an oral diabetes medicine that helps control blood sugar levels by helping your pancreas produce insulin. Glucotrol is used together with diet and exercise to improve blood sugar control in adults with type 2 diabetes mellitus. Glucotrol is not for treating type 1 diabetes.",
+		"side_effects":"headache, irritability:sweating, fast heart rate:dizziness, nausea:diarrhea, constipation, gas"
+	},
+	"epitol":{
+		"generic_name": "carbamazepine",
+		"description": "Epitol is an anticonvulsant that is used to treat seizures and nerve pain such as trigeminal neuralgia and diabetic neuropathy. This medicine is also used to treat bipolar disorder.",
+		"side_effects":"skin rash:loss of appetite, right-sided upper stomach pain, dark urine:slow, fast, or pounding heartbeats:fever, chills, sore throat, mouth sores, bleeding gums, nosebleeds, pale skin, easy bruising, unusual tiredness, feeling light-headed or short of breath"
+	},
+	"keppra":{
+		"generic_name": "levetiracetam",
+		"description": "Keppra (levetiracetam) is an anti-epileptic drug, also called an anticonvulsant. Keppra is used to treat partial onset seizures in adults and children who are at least 1 month old. Keppra is also used to treat tonic-clonic seizures in people who are at least 6 years old, and myoclonic seizures in people who are at least 12 years old.",
+		"side_effects":"unusual changes in mood or behavior:confusion, hallucinations, loss of balance or coordination:extreme drowsiness, feeling very weak or tired:problems with walking or movement"
+	},
+	"bystolic":{
+		"generic_name": "nebivolol",
+		"description": "Bystolic (nebivolol) belongs to a group of drugs called beta-blockers. Beta-blockers affect the heart and circulation (blood flow through arteries and veins). Bystolic is used to treat hypertension (high blood pressure). Lowering blood pressure may lower your risk of a stroke or heart attack.",
+		"side_effects":"feeling short of breath, even with mild exertion:swelling of your ankles or feet:slow or uneven heartbeats:numbness or cold feeling in your hands and feet"
+	},
+	"atenolol":{
+		"generic_name": "atenolol",
+		"description": "Atenolol (Tenormin) is a beta-blocker that affects the heart and circulation (blood flow through arteries and veins). Atenolol is used to treat angina (chest pain) and hypertension (high blood pressure). Atenolol is also used to lower the risk of death after a heart attack.",
+		"side_effects":"new or worsening chest pain:slow or uneven heartbeats:a light-headed feeling, like you might pass out:shortness of breath (even with mild exertion), swelling, rapid weight gain"
+	},
+	"benicar":{
+		"generic_name": "olmesartan",
+		"description": "Benicar (olmesartan) is an angiotensin II receptor antagonist. Olmesartan keeps blood vessels from narrowing, which lowers blood pressure and improves blood flow. Benicar is used to treat high blood pressure (hypertension) in adults and children who are at least 6 years old. Benicar is sometimes given together with other blood pressure medications.",
+		"side_effects":"a light-headed feeling, like you might pass out:little or no urination:fast heart rate:nausea, weakness, tingly feeling, chest pain, irregular heartbeats, loss of movement"
+		}
+}
+
