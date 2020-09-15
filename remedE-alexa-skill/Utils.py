@@ -22,3 +22,10 @@ def get_user_key(username):
             break
         i = i + 1
 
+
+def get_med_json_data(medicine_name):
+    with open('assets/med_data.json', 'r') as f:
+        data = json.load(f)
+    f.close()
+    return data[medicine_name]
+
