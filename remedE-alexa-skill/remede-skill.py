@@ -10,7 +10,7 @@ from ask_sdk_core.dispatch_components import (
 import ask_sdk_core.utils as ask_utils
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.services.reminder_management import Trigger, TriggerType, AlertInfo, SpokenInfo, SpokenText, \
-    PushNotification, PushNotificationStatus, ReminderRequest
+    PushNotification, PushNotificationStatus, ReminderRequest, Recurrence, recurrence_freq
 from ask_sdk_model.services import ServiceException
 
 
@@ -26,6 +26,7 @@ logger.setLevel(logging.INFO)
 user_slot = "userName"
 medicine_slot = "medicine"
 REQUIRED_PERMISSIONS = ["alexa::alerts:reminders:skill:readwrite"]
+TIMEZONE_ID = "India/Delhi"
 
 app = Flask(__name__)
 sb = CustomSkillBuilder(api_client=DefaultApiClient())
@@ -58,16 +59,23 @@ class LoginIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("LoginIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Union[None, Response]
+        # type: (HandlerInput) -> Response
 
         slots = handler_input.request_envelope.request.intent.slots
 
         if user_slot in slots:
             username = slots[user_slot].value
             Utils.get_user_key(username=username)
-            speech = "Welcome {}, good to have you on board! " \
-                     "I found some medicines in your record, would you like to set a " \
-                     "reminder for them?".format(username)
+            med_data = Utils.get_user_medicine_data()
+
+            if med_data is None:
+                speech = "Welcome {}, good to have you on board!".format(username)
+            else:
+                # make user medicine data available as session attributes to create alarms ReminderIntentHandler
+                handler_input.attributes_manager.session_attributes['med_data'] = med_data
+                speech = "Welcome {}, good to have you on board! " \
+                         "I found some medicines in your record, would you like to set a " \
+                         "reminder for them?".format(username)
 
         else:
             speech = "I could not catch your name, try again please"
@@ -86,7 +94,7 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("AMAZON.YesIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Union[None, Response]
+        # type: (HandlerInput) -> Response
         permissions = handler_input.request_envelope.context.system.user.permissions
         reminder_service = handler_input.service_client_factory.get_reminder_management_service()
 
@@ -98,9 +106,11 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
         else:
             time_now = datetime.datetime.now()
             reminder_time = time_now + datetime.timedelta(seconds=+15)
-            notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
+            # notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
+            recurrence = Recurrence(freq=recurrence_freq.RecurrenceFreq.DAILY)
 
-            trigger = Trigger(TriggerType.SCHEDULED_RELATIVE, offset_in_seconds=15)
+            trigger = Trigger(TriggerType.SCHEDULED_ABSOLUTE, scheduled_time=reminder_time,
+                              time_zone_id=TIMEZONE_ID, recurrence=recurrence)
             text = SpokenText(locale='en-IN', ssml='<speak>Time to take your Medicine</speak>',
                               text='Time to take your medicine')
             alert_info = AlertInfo(SpokenInfo([text]))
@@ -130,7 +140,7 @@ class GetMedDataIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("GetMedDataIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Union[None, Response]
+        # type: (HandlerInput) -> Response
 
         slots = handler_input.request_envelope.request.intent.slots
 
@@ -155,7 +165,7 @@ class GetSideEffectsIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("GetSideEffectsIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Union[None, Response]
+        # type: (HandlerInput) -> Response
 
         slots = handler_input.request_envelope.request.intent.slots
 
@@ -179,7 +189,7 @@ class GetNextDoseIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("GetNextDoseIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Union[None, Response]
+        # type: (HandlerInput) -> Response
 
         slots = handler_input.request_envelope.request.intent.slots
 
@@ -203,7 +213,7 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("GetRemainingStockIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Union[None, Response]
+        # type: (HandlerInput) -> Response
 
         slots = handler_input.request_envelope.request.intent.slots
 

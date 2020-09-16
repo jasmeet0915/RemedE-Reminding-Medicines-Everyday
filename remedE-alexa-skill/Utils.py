@@ -3,7 +3,6 @@ import firebase_admin
 import json
 from datetime import datetime, time
 
-
 creds = credentials.Certificate("/home/singh/Downloads/remede-service-account-key.json")
 firebase_admin.initialize_app(creds, {'databaseURL': 'https://remede-b04d1.firebaseio.com/'})
 
@@ -31,7 +30,7 @@ def get_med_json_data(medicine_name):
     return data[medicine_name]
 
 
-def get_user_medicine_data(med_name):
+def get_user_medicine_data(med_name=None):
     with open("assets/user_key.json") as file:
         data = json.load(file)
 
@@ -39,10 +38,15 @@ def get_user_medicine_data(med_name):
     db_ref = db.reference("Patients/" + str(data['key']))
     snapshot = db_ref.get()
     print(snapshot)
-    for med in snapshot['medicines']:
-        print(snapshot['medicines'][med]['name'])
-        if snapshot['medicines'][med]['name'] == med_name:
-            return snapshot['medicines'][med]
+
+    if med_name is None:
+        return snapshot['medicines']
+
+    else:
+        for med in snapshot['medicines']:
+            print(snapshot['medicines'][med]['name'])
+            if snapshot['medicines'][med]['name'] == med_name:
+                return snapshot['medicines'][med]
 
 
 def get_next_dose(med_name):
