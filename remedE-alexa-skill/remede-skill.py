@@ -19,6 +19,7 @@ import data
 from flask_ask_sdk.skill_adapter import SkillAdapter
 import json
 import datetime
+import pytz
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -26,7 +27,7 @@ logger.setLevel(logging.INFO)
 user_slot = "userName"
 medicine_slot = "medicine"
 REQUIRED_PERMISSIONS = ["alexa::alerts:reminders:skill:readwrite"]
-TIMEZONE_ID = "India/Delhi"
+TIME_ZONE_ID = "Asia/Kolkata"
 
 app = Flask(__name__)
 sb = CustomSkillBuilder(api_client=DefaultApiClient())
@@ -62,6 +63,7 @@ class LoginIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
 
         slots = handler_input.request_envelope.request.intent.slots
+        rb = handler_input.response_builder
 
         if user_slot in slots:
             username = slots[user_slot].value
@@ -70,20 +72,18 @@ class LoginIntentHandler(AbstractRequestHandler):
 
             if med_data is None:
                 speech = "Welcome {}, good to have you on board!".format(username)
+                return rb.speak(speech).response
             else:
                 # make user medicine data available as session attributes to create alarms ReminderIntentHandler
                 handler_input.attributes_manager.session_attributes['med_data'] = med_data
                 speech = "Welcome {}, good to have you on board! " \
                          "I found some medicines in your record, would you like to set a " \
                          "reminder for them?".format(username)
+                return rb.speak(speech).ask(speech).response
 
         else:
             speech = "I could not catch your name, try again please"
-
-        return (handler_input.response_builder
-                .speak(speech)
-                .ask(speech)
-                .response)
+            return rb.speak(speech).response
 
 
 class CreateMedicineReminderHandler(AbstractRequestHandler):
@@ -97,6 +97,7 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         permissions = handler_input.request_envelope.context.system.user.permissions
         reminder_service = handler_input.service_client_factory.get_reminder_management_service()
+        med_data = handler_input.attributes_manager.session_attributes['med_data']
 
         if not(permissions and permissions.consent_token):
             return (handler_input.response_builder
@@ -104,28 +105,23 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
                            "Please provide reminder permissions to the skill using the alexa app")
                     .response)
         else:
-            time_now = datetime.datetime.now()
-            reminder_time = time_now + datetime.timedelta(seconds=+15)
-            # notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
+            time_now = datetime.datetime.now(pytz.timezone(TIME_ZONE_ID))
+            reminder_time = time_now + datetime.timedelta(seconds=+60)
+            notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
             recurrence = Recurrence(freq=recurrence_freq.RecurrenceFreq.DAILY)
 
-            trigger = Trigger(TriggerType.SCHEDULED_ABSOLUTE, scheduled_time=reminder_time,
-                              time_zone_id=TIMEZONE_ID, recurrence=recurrence)
-            text = SpokenText(locale='en-IN', ssml='<speak>Time to take your Medicine</speak>',
-                              text='Time to take your medicine')
+            trigger = Trigger(TriggerType.SCHEDULED_ABSOLUTE, scheduled_time=notification_time,
+                              time_zone_id=TIME_ZONE_ID, recurrence=recurrence)
+            text = SpokenText(locale='en-US', text='Time to take your medicine')
             alert_info = AlertInfo(SpokenInfo([text]))
             push_notification = PushNotification(PushNotificationStatus.ENABLED)
 
-            reminder_request = ReminderRequest(trigger=trigger, alert_info=alert_info,
-                                               push_notification=push_notification)
+            reminder_request = ReminderRequest(request_time=time_now.strftime("%Y-%m-%dT%H:%M:%S"), trigger=trigger,
+                                               alert_info=alert_info, push_notification=push_notification)
 
-            try:
-                reminder_responce = reminder_service.create_reminder(reminder_request)
+            print(reminder_request)
 
-            except ServiceException as e:
-                # see: https://developer.amazon.com/docs/smapi/alexa-reminders-api-reference.html#error-messages
-                logger.error(e)
-                raise e
+            reminder_response = reminder_service.create_reminder(reminder_request, full_response=True)
 
             return (handler_input.response_builder
                     .speak("The reminder for your medicine has been created")

@@ -34,10 +34,8 @@ def get_user_medicine_data(med_name=None):
     with open("assets/user_key.json") as file:
         data = json.load(file)
 
-    print(data['key'])
     db_ref = db.reference("Patients/" + str(data['key']))
     snapshot = db_ref.get()
-    print(snapshot)
 
     if med_name is None:
         return snapshot['medicines']
