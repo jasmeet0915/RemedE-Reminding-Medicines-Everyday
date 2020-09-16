@@ -3,18 +3,22 @@ import gettext
 from flask import Flask
 import Utils
 
-from ask_sdk_core.skill_builder import SkillBuilder
+from ask_sdk_core.skill_builder import SkillBuilder, CustomSkillBuilder
+from ask_sdk_core.api_client import DefaultApiClient
 from ask_sdk_core.dispatch_components import (
     AbstractRequestHandler, AbstractRequestInterceptor, AbstractExceptionHandler)
 import ask_sdk_core.utils as ask_utils
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.services.reminder_management import Trigger, TriggerType, AlertInfo, SpokenInfo, SpokenText, \
     PushNotification, PushNotificationStatus, ReminderRequest
+from ask_sdk_model.services import ServiceException
+
 
 from ask_sdk_model import Response
 import data
 from flask_ask_sdk.skill_adapter import SkillAdapter
 import json
+import datetime
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -24,6 +28,7 @@ medicine_slot = "medicine"
 REQUIRED_PERMISSIONS = ["alexa::alerts:reminders:skill:readwrite"]
 
 app = Flask(__name__)
+sb = CustomSkillBuilder(api_client=DefaultApiClient())
 
 
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -83,12 +88,37 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Union[None, Response]
         permissions = handler_input.request_envelope.context.system.user.permissions
-        #reminder_service = handler_input.service_client_factory.get_reminder_management_service()
+        reminder_service = handler_input.service_client_factory.get_reminder_management_service()
 
         if not(permissions and permissions.consent_token):
             return (handler_input.response_builder
                     .speak("You don't have Permissions set for reminders, "
                            "Please provide reminder permissions to the skill using the alexa app")
+                    .response)
+        else:
+            time_now = datetime.datetime.now()
+            reminder_time = time_now + datetime.timedelta(seconds=+15)
+            notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
+
+            trigger = Trigger(TriggerType.SCHEDULED_RELATIVE, offset_in_seconds=15)
+            text = SpokenText(locale='en-IN', ssml='<speak>Time to take your Medicine</speak>',
+                              text='Time to take your medicine')
+            alert_info = AlertInfo(SpokenInfo([text]))
+            push_notification = PushNotification(PushNotificationStatus.ENABLED)
+
+            reminder_request = ReminderRequest(trigger=trigger, alert_info=alert_info,
+                                               push_notification=push_notification)
+
+            try:
+                reminder_responce = reminder_service.create_reminder(reminder_request)
+
+            except ServiceException as e:
+                # see: https://developer.amazon.com/docs/smapi/alexa-reminders-api-reference.html#error-messages
+                logger.error(e)
+                raise e
+
+            return (handler_input.response_builder
+                    .speak("The reminder for your medicine has been created")
                     .response)
 
 
@@ -308,8 +338,6 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
 # payloads to the handlers above. Make sure any new handlers or interceptors you've
 # defined are included below. The order matters - they're processed top to bottom.
 
-
-sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
 
