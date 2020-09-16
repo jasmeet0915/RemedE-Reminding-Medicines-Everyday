@@ -8,6 +8,8 @@ from ask_sdk_core.dispatch_components import (
     AbstractRequestHandler, AbstractRequestInterceptor, AbstractExceptionHandler)
 import ask_sdk_core.utils as ask_utils
 from ask_sdk_core.handler_input import HandlerInput
+from ask_sdk_model.services.reminder_management import Trigger, TriggerType, AlertInfo, SpokenInfo, SpokenText, \
+    PushNotification, PushNotificationStatus, ReminderRequest
 
 from ask_sdk_model import Response
 import data
@@ -19,6 +21,7 @@ logger.setLevel(logging.INFO)
 
 user_slot = "userName"
 medicine_slot = "medicine"
+REQUIRED_PERMISSIONS = ["alexa::alerts:reminders:skill:readwrite"]
 
 app = Flask(__name__)
 
@@ -68,6 +71,25 @@ class LoginIntentHandler(AbstractRequestHandler):
                 .speak(speech)
                 .ask(speech)
                 .response)
+
+
+class CreateMedicineReminderHandler(AbstractRequestHandler):
+    """Handler for creating medicine reminders using AMAZON.YesIntent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("AMAZON.YesIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+        permissions = handler_input.request_envelope.context.system.user.permissions
+        #reminder_service = handler_input.service_client_factory.get_reminder_management_service()
+
+        if not(permissions and permissions.consent_token):
+            return (handler_input.response_builder
+                    .speak("You don't have Permissions set for reminders, "
+                           "Please provide reminder permissions to the skill using the alexa app")
+                    .response)
 
 
 class GetMedDataIntentHandler(AbstractRequestHandler):
@@ -292,6 +314,7 @@ sb = SkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 
 sb.add_request_handler(LoginIntentHandler())
+sb.add_request_handler(CreateMedicineReminderHandler())
 sb.add_request_handler(GetMedDataIntentHandler())
 sb.add_request_handler(GetSideEffectsIntentHandler())
 sb.add_request_handler(GetNextDoseIntentHandler())
