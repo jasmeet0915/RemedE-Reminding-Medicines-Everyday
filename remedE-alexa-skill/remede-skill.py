@@ -13,7 +13,6 @@ from ask_sdk_model.services.reminder_management import Trigger, TriggerType, Ale
     PushNotification, PushNotificationStatus, ReminderRequest, Recurrence, recurrence_freq
 from ask_sdk_model.services import ServiceException
 
-
 from ask_sdk_model import Response
 import data
 from flask_ask_sdk.skill_adapter import SkillAdapter
@@ -35,6 +34,7 @@ sb = CustomSkillBuilder(api_client=DefaultApiClient())
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """Launch Request Handler"""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return ask_utils.is_request_type("LaunchRequest")(handler_input)
@@ -47,8 +47,8 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
         return (
             handler_input.response_builder
-            .speak(speak_output)
-            .response
+                .speak(speak_output)
+                .response
         )
 
 
@@ -99,33 +99,44 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
         reminder_service = handler_input.service_client_factory.get_reminder_management_service()
         med_data = handler_input.attributes_manager.session_attributes['med_data']
 
-        if not(permissions and permissions.consent_token):
+        if not (permissions and permissions.consent_token):
             return (handler_input.response_builder
                     .speak("You don't have Permissions set for reminders, "
                            "Please provide reminder permissions to the skill using the alexa app")
                     .response)
         else:
-            time_now = datetime.datetime.now(pytz.timezone(TIME_ZONE_ID))
-            reminder_time = time_now + datetime.timedelta(seconds=+60)
-            notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
-            recurrence = Recurrence(freq=recurrence_freq.RecurrenceFreq.DAILY)
+            for med in med_data:
+                med_name = med_data[med]['name']
+                med_times = med_data[med]['times']
+                for time in med_times:
+                    time_now = datetime.datetime.now(pytz.timezone(TIME_ZONE_ID))
 
-            trigger = Trigger(TriggerType.SCHEDULED_ABSOLUTE, scheduled_time=notification_time,
-                              time_zone_id=TIME_ZONE_ID, recurrence=recurrence)
-            text = SpokenText(locale='en-US', text='Time to take your medicine')
-            alert_info = AlertInfo(SpokenInfo([text]))
-            push_notification = PushNotification(PushNotificationStatus.ENABLED)
+                    # get reminder time hour, minute and create reminder_time datetime object
+                    time = time.split(':')
+                    hour = int(time[0])
+                    minute = int(time[1])
+                    reminder_time = datetime.datetime(year=time_now.year, month=time_now.month, day=time_now.day,
+                                                      hour=hour, minute=minute, tzinfo=pytz.timezone(TIME_ZONE_ID))
+                    time_now = time_now.strftime("%Y-%m-%dT%H:%M:%S")
+                    notification_time = reminder_time.strftime("%Y-%m-%dT%H:%M:%S")
 
-            reminder_request = ReminderRequest(request_time=time_now.strftime("%Y-%m-%dT%H:%M:%S"), trigger=trigger,
-                                               alert_info=alert_info, push_notification=push_notification)
+                    recurrence = Recurrence(freq=recurrence_freq.RecurrenceFreq.DAILY)
 
-            print(reminder_request)
+                    trigger = Trigger(TriggerType.SCHEDULED_ABSOLUTE, scheduled_time=notification_time,
+                                      time_zone_id=TIME_ZONE_ID, recurrence=recurrence)
+                    text = SpokenText(locale='en-US', text='Time to take your medicine {}'.format(med_name))
+                    alert_info = AlertInfo(SpokenInfo([text]))
+                    push_notification = PushNotification(PushNotificationStatus.ENABLED)
 
-            reminder_response = reminder_service.create_reminder(reminder_request, full_response=True)
+                    reminder_request = ReminderRequest(request_time=time_now, trigger=trigger,
+                                                       alert_info=alert_info, push_notification=push_notification)
 
-            return (handler_input.response_builder
-                    .speak("The reminder for your medicine has been created")
-                    .response)
+                    print(reminder_request)
+                    reminder_response = reminder_service.create_reminder(reminder_request, full_response=True)
+
+        return (handler_input.response_builder
+                .speak("Reminders have been successfully created for all your medicines!")
+                .response)
 
 
 class GetMedDataIntentHandler(AbstractRequestHandler):
@@ -144,7 +155,8 @@ class GetMedDataIntentHandler(AbstractRequestHandler):
             med_name = slots[medicine_slot].value
             med_data = Utils.get_med_json_data(med_name)
             speech = "The generic name of " + med_name + " is " + med_data['generic_name'] + ". A brief description " \
-                     "is as stated, " + med_data['description']
+                                                                                             "is as stated, " + \
+                     med_data['description']
         else:
             speech = "I could not understand the name of the medicine, try again please"
 
@@ -216,7 +228,7 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
         if medicine_slot in slots:
             med_name = slots[medicine_slot].value
             remaining_stock = Utils.get_remaining_stock(med_name)
-            speech = "The remaining stock for your medicine "+med_name+" is "+str(remaining_stock)
+            speech = "The remaining stock for your medicine " + med_name + " is " + str(remaining_stock)
         else:
             speech = "I could not find that medicine in your records, please try again"
 
@@ -239,9 +251,9 @@ class HelpIntentHandler(AbstractRequestHandler):
 
         return (
             handler_input.response_builder
-            .speak(speak_output)
-            .ask(speak_output)
-            .response
+                .speak(speak_output)
+                .ask(speak_output)
+                .response
         )
 
 
@@ -260,8 +272,8 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
         return (
             handler_input.response_builder
-            .speak(speak_output)
-            .response
+                .speak(speak_output)
+                .response
         )
 
 
@@ -299,9 +311,9 @@ class IntentReflectorHandler(AbstractRequestHandler):
 
         return (
             handler_input.response_builder
-            .speak(speak_output)
-            # .ask("add a reprompt if you want to keep the session open for the user to respond")
-            .response
+                .speak(speak_output)
+                # .ask("add a reprompt if you want to keep the session open for the user to respond")
+                .response
         )
 
 
@@ -323,9 +335,9 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 
         return (
             handler_input.response_builder
-            .speak(speak_output)
-            .ask(speak_output)
-            .response
+                .speak(speak_output)
+                .ask(speak_output)
+                .response
         )
 
 
@@ -339,6 +351,7 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
         i18n = gettext.translation(
             'data', localedir='locales', languages=[locale], fallback=True)
         handler_input.attributes_manager.request_attributes["_"] = i18n.gettext
+
 
 # The SkillBuilder object acts as the entry point for your skill, routing all request and response
 # payloads to the handlers above. Make sure any new handlers or interceptors you've
@@ -365,13 +378,9 @@ sb.add_global_request_interceptor(LocalizationInterceptor())
 
 sb.add_exception_handler(CatchAllExceptionHandler())
 
-skill_response = SkillAdapter(skill=sb.create(), skill_id="amzn1.ask.skill.cd33a56e-3c27-409e-aa97-8e24a2f0d8da", app=app)
+skill_response = SkillAdapter(skill=sb.create(), skill_id="amzn1.ask.skill.cd33a56e-3c27-409e-aa97-8e24a2f0d8da",
+                              app=app)
 skill_response.register(app=app, route="/")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
