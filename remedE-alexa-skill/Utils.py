@@ -62,9 +62,21 @@ def get_next_dose(med_name):
             return dose_time
 
 
-def get_remaining_stock(med_name):
-    med_data_dict = get_user_medicine_data(med_name)
-    print(med_data_dict)
-    remaining_stock = med_data_dict['remaining_stock']
-    print(remaining_stock)
-    return remaining_stock
+def get_days_left(dose, remaining_stock):
+    days = 0
+    while remaining_stock >= 0:
+        remaining_stock = remaining_stock - dose
+        days = days + 1
+
+    return days
+
+
+def get_remaining_stock(med_name=None):
+    all_med_data = get_user_medicine_data(med_name)
+    days_left = []
+    for med in all_med_data:
+        med_data = get_user_medicine_data(all_med_data[med]['name'])
+        days_left.append({'name': med_data['name'],
+                          'days_left': get_days_left(med_data['dose'], med_data['remaining_stock'])})
+
+    return days_left
