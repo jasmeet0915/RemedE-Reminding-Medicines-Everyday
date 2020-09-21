@@ -228,19 +228,36 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
 
         curr_req = handler_input.request_envelope.request
+
+        # delegate directive for reorder intent
         reorder_intent = Intent(name="ReorderMedicinesIntent", slots={},
                                 confirmation_status=IntentConfirmationStatus.NONE)
         reorder_intent_directive = DelegateDirective(reorder_intent)
 
-        med_data = Utils.get_user_medicine_data('atrovent')
+        # delegate intent for stop intent
+        stop_intent = Intent(name="AMAZON.StopIntent", slots={},
+                             confirmation_status=IntentConfirmationStatus.NONE)
+        stop_intent_directive = DelegateDirective(stop_intent)
+
+        # delegate directive intent for current intent
         current_intent = Intent(name=curr_req.intent.name, slots=curr_req.intent.slots,
                                 confirmation_status=curr_req.intent.confirmation_status)
         confirm_intent_directive = DelegateDirective(current_intent)
-        speech = "The remaining stock for your medicine " + med_data['name'] + " is " + str(med_data['remaining_stock'])
-        print(curr_req.intent.confirmation_status)
 
+        med_data = Utils.get_remaining_stock()
+        speech = data.get_remaining_stock_intent_response(med_data)
+
+        # if user has allowed the intent to reorder medicines, then set dialog_state in the request to completed
+        # to allow the dialog model to end
         if curr_req.intent.confirmation_status == IntentConfirmationStatus.CONFIRMED:
             handler_input.request_envelope.request.dialog_state = 'COMPLETED'
+
+        # got to AMAZON.StopIntent when the user denies intent confirmation
+        if curr_req.intent.confirmation_status == IntentConfirmationStatus.DENIED:
+            return (handler_input.response_builder
+                    .speak("Okay")
+                    .add_directive(stop_intent_directive)
+                    .response)
 
         if handler_input.request_envelope.request.dialog_state != "COMPLETED":
             return (handler_input.response_builder
