@@ -12,6 +12,11 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.services.reminder_management import Trigger, TriggerType, AlertInfo, SpokenInfo, SpokenText, \
     PushNotification, PushNotificationStatus, ReminderRequest, Recurrence, recurrence_freq
 from ask_sdk_model.services import ServiceException
+from ask_sdk_model import Directive, Intent, Slot, SlotConfirmationStatus
+from ask_sdk_model.dialog.confirm_intent_directive import ConfirmIntentDirective
+from ask_sdk_model.intent_confirmation_status import IntentConfirmationStatus
+from ask_sdk_model.dialog.delegate_directive import DelegateDirective
+
 
 from ask_sdk_model import Response
 import data
@@ -45,11 +50,9 @@ class LaunchRequestHandler(AbstractRequestHandler):
         speak_output = "Welcome to remedy helper! I am here to help you adhere better to your medicines and " \
                        "make you more self aware. You can start by telling me your name and asking me to login!"
 
-        return (
-            handler_input.response_builder
+        return (handler_input.response_builder
                 .speak(speak_output)
-                .response
-        )
+                .response)
 
 
 class LoginIntentHandler(AbstractRequestHandler):
@@ -128,6 +131,7 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
                     alert_info = AlertInfo(SpokenInfo([text]))
                     push_notification = PushNotification(PushNotificationStatus.ENABLED)
 
+                    # generate the reminder request object
                     reminder_request = ReminderRequest(request_time=time_now, trigger=trigger,
                                                        alert_info=alert_info, push_notification=push_notification)
 
@@ -223,15 +227,43 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
 
-        slots = handler_input.request_envelope.request.intent.slots
+        curr_req = handler_input.request_envelope.request
+        reorder_intent = Intent(name="ReorderMedicinesIntent", slots={},
+                                confirmation_status=IntentConfirmationStatus.NONE)
+        reorder_intent_directive = DelegateDirective(reorder_intent)
 
-        if medicine_slot in slots:
-            med_name = slots[medicine_slot].value
-            remaining_stock = Utils.get_remaining_stock(med_name)
-            speech = "The remaining stock for your medicine " + med_name + " is " + str(remaining_stock)
+        med_data = Utils.get_user_medicine_data('atrovent')
+        current_intent = Intent(name=curr_req.intent.name, slots=curr_req.intent.slots,
+                                confirmation_status=curr_req.intent.confirmation_status)
+        confirm_intent_directive = DelegateDirective(current_intent)
+        speech = "The remaining stock for your medicine " + med_data['name'] + " is " + str(med_data['remaining_stock'])
+        print(curr_req.intent.confirmation_status)
+
+        if curr_req.intent.confirmation_status == IntentConfirmationStatus.CONFIRMED:
+            handler_input.request_envelope.request.dialog_state = 'COMPLETED'
+
+        if handler_input.request_envelope.request.dialog_state != "COMPLETED":
+            return (handler_input.response_builder
+                    .add_directive(confirm_intent_directive)
+                    .speak(speech)
+                    .response)
         else:
-            speech = "I could not find that medicine in your records, please try again"
+            return (handler_input.response_builder
+                    .speak(speech)
+                    .add_directive(reorder_intent_directive)
+                    .response)
 
+
+class ReorderMedicinesIntentHandler(AbstractRequestHandler):
+    """Handler for ReorderMedicinesIntent chained with GetRemainingStockIntent"""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("ReorderMedicinesIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Union[None, Response]
+        speech = "I am reordering medicines for you"
         return (handler_input.response_builder
                 .speak(speech)
                 .response)
@@ -366,6 +398,7 @@ sb.add_request_handler(GetMedDataIntentHandler())
 sb.add_request_handler(GetSideEffectsIntentHandler())
 sb.add_request_handler(GetNextDoseIntentHandler())
 sb.add_request_handler(GetRemainingStockIntentHandler())
+sb.add_request_handler(ReorderMedicinesIntentHandler())
 
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
