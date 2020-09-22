@@ -19,7 +19,7 @@ from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
 
 import Utils
-import data
+import messages
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -43,8 +43,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = "Welcome to remedy helper! I am here to help you adhere better to your medicines and " \
-                       "make you more self aware. You can start by telling me your name and asking me to login!"
+        speak_output = messages.launch_welcome_message
 
         return (handler_input.response_builder
                 .speak(speak_output)
@@ -70,14 +69,13 @@ class LoginIntentHandler(AbstractRequestHandler):
             med_data = Utils.get_user_medicine_data()
 
             if med_data is None:
-                speech = "Welcome {}, good to have you on board!".format(username)
+                speech = messages.login_welcome_message.format(username)
                 return rb.speak(speech).response
             else:
                 # make user medicine data available as session attributes to create alarms ReminderIntentHandler
                 handler_input.attributes_manager.session_attributes['med_data'] = med_data
-                speech = "Welcome {}, good to have you on board! " \
-                         "I found some medicines in your record, would you like to set a " \
-                         "reminder for them?".format(username)
+                speech = messages.login_welcome_message + "I found some medicines in your record, would you like to " \
+                                                      "set a reminder for them?".format(username)
                 return rb.speak(speech).ask(speech).response
 
         else:
@@ -100,8 +98,7 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
 
         if not (permissions and permissions.consent_token):
             return (handler_input.response_builder
-                    .speak("You don't have Permissions set for reminders, "
-                           "Please provide reminder permissions to the skill using the alexa app")
+                    .speak(messages.set_permissions_message)
                     .response)
         else:
             for med in med_data:
@@ -154,9 +151,7 @@ class GetMedDataIntentHandler(AbstractRequestHandler):
         if medicine_slot in slots:
             med_name = slots[medicine_slot].value
             med_data = Utils.get_med_json_data(med_name)
-            speech = "The generic name of " + med_name + " is " + med_data['generic_name'] + ". A brief description " \
-                                                                                             "is as stated, " + \
-                     med_data['description']
+            speech = messages.get_description_response(med_name, med_data['generic_name'], med_data['description'])
         else:
             speech = "I could not understand the name of the medicine, try again please"
 
@@ -241,7 +236,7 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
         confirm_intent_directive = DelegateDirective(current_intent)
 
         med_data = Utils.get_remaining_stock()
-        speech, reorder_meds = data.get_remaining_stock_intent_response(med_data)
+        speech, reorder_meds = messages.get_remaining_stock_intent_response(med_data)
 
         # add reorder meds to session attributes to enable access from reorder intent handler
         handler_input.attributes_manager.session_attributes['reorder_meds'] = reorder_meds
@@ -288,7 +283,8 @@ class ReorderMedicinesIntentHandler(AbstractRequestHandler):
                 speech = speech + ", " + med
             speech = speech + " have been placed and will be arriving in 2 days! "
 
-            card = ui.SimpleCard(title="Remedy Helper\nYou order has been confirmed!", text=speech + "\nOrder ID: GCYS8GW8677")
+            card = ui.SimpleCard(title="Remedy Helper\nYou order has been confirmed!",
+                                 text=speech + "\nOrder ID: GCYS8GW8677")
 
             speech = speech + "All the details have been sent to the card in your mobile alexa app!"
 
@@ -308,7 +304,7 @@ class HelpIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(data.HELP_MSG)
+        speak_output = _(messages.HELP_MSG)
 
         return (
             handler_input.response_builder
@@ -329,13 +325,12 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(data.GOODBYE_MSG)
+        speak_output = _(messages.GOODBYE_MSG)
 
         return (
             handler_input.response_builder
-                .speak(speak_output)
-                .response
-        )
+                         .speak(speak_output)
+                         .response)
 
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
@@ -368,7 +363,7 @@ class IntentReflectorHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
         intent_name = ask_utils.get_intent_name(handler_input)
-        speak_output = _(data.REFLECTOR_MSG).format(intent_name)
+        speak_output = _(messages.REFLECTOR_MSG).format(intent_name)
 
         return (
             handler_input.response_builder
@@ -392,7 +387,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
         # type: (HandlerInput, Exception) -> Response
         logger.error(exception, exc_info=True)
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(data.ERROR)
+        speak_output = _(messages.ERROR)
 
         return (
             handler_input.response_builder
