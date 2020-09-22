@@ -19,7 +19,7 @@ from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
 
 import Utils
-import messages
+import data
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -43,7 +43,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = messages.launch_welcome_message
+        speak_output = data.launch_welcome_message
 
         return (handler_input.response_builder
                 .speak(speak_output)
@@ -69,12 +69,12 @@ class LoginIntentHandler(AbstractRequestHandler):
             med_data = Utils.get_user_medicine_data()
 
             if med_data is None:
-                speech = messages.login_welcome_message.format(username)
+                speech = data.login_welcome_message.format(username)
                 return rb.speak(speech).response
             else:
                 # make user medicine data available as session attributes to create alarms ReminderIntentHandler
                 handler_input.attributes_manager.session_attributes['med_data'] = med_data
-                speech = messages.login_welcome_message + "I found some medicines in your record, would you like to " \
+                speech = data.login_welcome_message + "I found some medicines in your record, would you like to " \
                                                       "set a reminder for them?".format(username)
                 return rb.speak(speech).ask(speech).response
 
@@ -98,7 +98,7 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
 
         if not (permissions and permissions.consent_token):
             return (handler_input.response_builder
-                    .speak(messages.set_permissions_message)
+                    .speak(data.set_permissions_message)
                     .response)
         else:
             for med in med_data:
@@ -128,7 +128,6 @@ class CreateMedicineReminderHandler(AbstractRequestHandler):
                     reminder_request = ReminderRequest(request_time=time_now, trigger=trigger,
                                                        alert_info=alert_info, push_notification=push_notification)
 
-                    print(reminder_request)
                     reminder_response = reminder_service.create_reminder(reminder_request, full_response=True)
 
         return (handler_input.response_builder
@@ -151,7 +150,7 @@ class GetMedDataIntentHandler(AbstractRequestHandler):
         if medicine_slot in slots:
             med_name = slots[medicine_slot].value
             med_data = Utils.get_med_json_data(med_name)
-            speech = messages.get_description_response(med_name, med_data['generic_name'], med_data['description'])
+            speech = data.get_description_response(med_name, med_data['generic_name'], med_data['description'])
         else:
             speech = "I could not understand the name of the medicine, try again please"
 
@@ -236,7 +235,7 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
         confirm_intent_directive = DelegateDirective(current_intent)
 
         med_data = Utils.get_remaining_stock()
-        speech, reorder_meds = messages.get_remaining_stock_intent_response(med_data)
+        speech, reorder_meds = data.get_remaining_stock_intent_response(med_data)
 
         # add reorder meds to session attributes to enable access from reorder intent handler
         handler_input.attributes_manager.session_attributes['reorder_meds'] = reorder_meds
@@ -275,8 +274,7 @@ class ReorderMedicinesIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Union[None, Response]
         reorder_meds = handler_input.attributes_manager.session_attributes['reorder_meds']
-        print(reorder_meds)
-        print(type(reorder_meds))
+
         if reorder_meds:
             speech = "Order for your medicines "
             for med in reorder_meds:
@@ -284,7 +282,7 @@ class ReorderMedicinesIntentHandler(AbstractRequestHandler):
             speech = speech + " have been placed and will be arriving in 2 days! "
 
             card = ui.SimpleCard(title="Remedy Helper\nYou order has been confirmed!",
-                                 text=speech + "\nOrder ID: GCYS8GW8677")
+                                 content=speech + "\nOrder ID: GCYS8GW8677")
 
             speech = speech + "All the details have been sent to the card in your mobile alexa app!"
 
@@ -304,7 +302,7 @@ class HelpIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(messages.HELP_MSG)
+        speak_output = _(data.HELP_MSG)
 
         return (
             handler_input.response_builder
@@ -325,7 +323,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(messages.GOODBYE_MSG)
+        speak_output = _(data.GOODBYE_MSG)
 
         return (
             handler_input.response_builder
@@ -363,7 +361,7 @@ class IntentReflectorHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         _ = handler_input.attributes_manager.request_attributes["_"]
         intent_name = ask_utils.get_intent_name(handler_input)
-        speak_output = _(messages.REFLECTOR_MSG).format(intent_name)
+        speak_output = _(data.REFLECTOR_MSG).format(intent_name)
 
         return (
             handler_input.response_builder
@@ -387,7 +385,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
         # type: (HandlerInput, Exception) -> Response
         logger.error(exception, exc_info=True)
         _ = handler_input.attributes_manager.request_attributes["_"]
-        speak_output = _(messages.ERROR)
+        speak_output = _(data.ERROR)
 
         return (
             handler_input.response_builder

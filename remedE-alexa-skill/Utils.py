@@ -42,21 +42,15 @@ def get_user_medicine_data(med_name=None):
 
     else:
         for med in snapshot['medicines']:
-            print(snapshot['medicines'][med]['name'])
             if snapshot['medicines'][med]['name'] == med_name:
                 return snapshot['medicines'][med]
 
 
 def get_next_dose(med_name):
     med_data_dict = get_user_medicine_data(med_name)
-    print(med_data_dict)
     times = med_data_dict['times']
-    print(times)
     time_now = datetime.now().time()
-    print(time_now)
     for dose_time, taken in times.items():
-        print(dose_time)
-        print(taken)
         dose_time_iso = time.fromisoformat(dose_time)
         if dose_time_iso > time_now and not taken:
             return dose_time
@@ -67,7 +61,6 @@ def get_days_left(dose, remaining_stock):
     while remaining_stock > 0:
         remaining_stock = remaining_stock - dose
         days = days + 1
-        print(days)
 
     return days
 

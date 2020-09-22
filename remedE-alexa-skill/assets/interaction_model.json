@@ -1,0 +1,213 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "remedy helper",
+            "modelConfiguration": {
+                "fallbackIntentSensitivity": {
+                    "level": "LOW"
+                }
+            },
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "LoginIntent",
+                    "slots": [
+                        {
+                            "name": "userName",
+                            "type": "AMAZON.Person"
+                        }
+                    ],
+                    "samples": [
+                        "provide medical adherence for {userName}",
+                        "open for {userName}",
+                        "login for user {userName}"
+                    ]
+                },
+                {
+                    "name": "GetMedDataIntent",
+                    "slots": [
+                        {
+                            "name": "medicine",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "what is {medicine} used for",
+                        "tell me about {medicine}",
+                        "give a brief description of {medicine}",
+                        "give me a brief description for {medicine}",
+                        "tell me some facts about {medicine}",
+                        "fetch me the details {medicine}",
+                        "give details for {medicine}"
+                    ]
+                },
+                {
+                    "name": "GetSideEffectsIntent",
+                    "slots": [
+                        {
+                            "name": "medicine",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "what can be the side effects of {medicine}",
+                        "tell me the side effects of {medicine}",
+                        "what are the side effects of {medicine} "
+                    ]
+                },
+                {
+                    "name": "GetNextDoseIntent",
+                    "slots": [
+                        {
+                            "name": "medicine",
+                            "type": "AMAZON.Food"
+                        }
+                    ],
+                    "samples": [
+                        "tell me the time of next dose of {medicine}",
+                        "when do i have to take {medicine} next",
+                        "when is my next dose for {medicine}"
+                    ]
+                },
+                {
+                    "name": "GetRemainingStockIntent",
+                    "slots": [],
+                    "samples": [
+                        "which of my medicines need a refilling",
+                        "give me a status update of my medicines",
+                        "which of my medicines are about to finish",
+                        "which of my medicines are running out",
+                        "update me on the status of my medicines"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "ReorderMedicinesIntent",
+                    "slots": [],
+                    "samples": []
+                }
+            ],
+            "types": [
+                {
+                    "name": "YesNoType",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "maybe later"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "not now"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "nah"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "nope"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "yep, why not"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sure go ahead"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "LoginIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "userName",
+                            "type": "AMAZON.Person",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.417788376273.1469960765635"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "GetRemainingStockIntent",
+                    "delegationStrategy": "SKILL_RESPONSE",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.723819353271"
+                    },
+                    "slots": []
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.417788376273.1469960765635",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "which user do you want to login for?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.723819353271",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "do you want me to place an order for your medicines?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "do you want me to order your medicines to refill the stock?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "would you like me to place an order for your medicines?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Should I reorder the medicines that are running  out?"
+                    }
+                ]
+            }
+        ]
+    }
+}
