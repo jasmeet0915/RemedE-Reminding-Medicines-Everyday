@@ -64,9 +64,10 @@ def get_next_dose(med_name):
 
 def get_days_left(dose, remaining_stock):
     days = 0
-    while remaining_stock >= 0:
+    while remaining_stock > 0:
         remaining_stock = remaining_stock - dose
         days = days + 1
+        print(days)
 
     return days
 

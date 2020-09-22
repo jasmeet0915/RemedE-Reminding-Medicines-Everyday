@@ -1,29 +1,25 @@
-import logging
+import datetime
 import gettext
-from flask import Flask
-import Utils
+import logging
 
-from ask_sdk_core.skill_builder import SkillBuilder, CustomSkillBuilder
+import ask_sdk_core.utils as ask_utils
+import pytz
 from ask_sdk_core.api_client import DefaultApiClient
 from ask_sdk_core.dispatch_components import (
     AbstractRequestHandler, AbstractRequestInterceptor, AbstractExceptionHandler)
-import ask_sdk_core.utils as ask_utils
 from ask_sdk_core.handler_input import HandlerInput
+from ask_sdk_core.skill_builder import CustomSkillBuilder
+from ask_sdk_model import Intent
+from ask_sdk_model import Response, ui
+from ask_sdk_model.dialog.delegate_directive import DelegateDirective
+from ask_sdk_model.intent_confirmation_status import IntentConfirmationStatus
 from ask_sdk_model.services.reminder_management import Trigger, TriggerType, AlertInfo, SpokenInfo, SpokenText, \
     PushNotification, PushNotificationStatus, ReminderRequest, Recurrence, recurrence_freq
-from ask_sdk_model.services import ServiceException
-from ask_sdk_model import Directive, Intent, Slot, SlotConfirmationStatus
-from ask_sdk_model.dialog.confirm_intent_directive import ConfirmIntentDirective
-from ask_sdk_model.intent_confirmation_status import IntentConfirmationStatus
-from ask_sdk_model.dialog.delegate_directive import DelegateDirective
-
-
-from ask_sdk_model import Response
-import data
+from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
-import json
-import datetime
-import pytz
+
+import Utils
+import data
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -245,14 +241,17 @@ class GetRemainingStockIntentHandler(AbstractRequestHandler):
         confirm_intent_directive = DelegateDirective(current_intent)
 
         med_data = Utils.get_remaining_stock()
-        speech = data.get_remaining_stock_intent_response(med_data)
+        speech, reorder_meds = data.get_remaining_stock_intent_response(med_data)
+
+        # add reorder meds to session attributes to enable access from reorder intent handler
+        handler_input.attributes_manager.session_attributes['reorder_meds'] = reorder_meds
 
         # if user has allowed the intent to reorder medicines, then set dialog_state in the request to completed
         # to allow the dialog model to end
         if curr_req.intent.confirmation_status == IntentConfirmationStatus.CONFIRMED:
             handler_input.request_envelope.request.dialog_state = 'COMPLETED'
 
-        # got to AMAZON.StopIntent when the user denies intent confirmation
+        # got to AMAZON.StopIntent when the user denies intent confirmation and stop the dialog model
         if curr_req.intent.confirmation_status == IntentConfirmationStatus.DENIED:
             return (handler_input.response_builder
                     .speak("Okay")
@@ -280,9 +279,22 @@ class ReorderMedicinesIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Union[None, Response]
-        speech = "I am reordering medicines for you"
+        reorder_meds = handler_input.attributes_manager.session_attributes['reorder_meds']
+        print(reorder_meds)
+        print(type(reorder_meds))
+        if reorder_meds:
+            speech = "Order for your medicines "
+            for med in reorder_meds:
+                speech = speech + ", " + med
+            speech = speech + " have been placed and will be arriving in 2 days! "
+
+            card = ui.SimpleCard(title="Remedy Helper\nYou order has been confirmed!", text=speech + "\nOrder ID: GCYS8GW8677")
+
+            speech = speech + "All the details have been sent to the card in your mobile alexa app!"
+
         return (handler_input.response_builder
                 .speak(speech)
+                .set_card(card)
                 .response)
 
 

@@ -13,7 +13,7 @@ def get_remaining_stock_intent_response(med_data):
     speech = "Here is the current status of your medicines: "
     reorder_meds = []
     for med in med_data:
-        speech = speech + med['name'] + " will last for " + str(med['days_left']) + " days"
+        speech = speech + med['name'] + " will last for " + str(med['days_left']) + " days "
         if med['days_left'] <= 3:
             reorder_meds.append(med['name'])
 
@@ -24,4 +24,4 @@ def get_remaining_stock_intent_response(med_data):
         for m in reorder_meds:
             speech = speech + m
 
-    return speech
+    return speech, reorder_meds
