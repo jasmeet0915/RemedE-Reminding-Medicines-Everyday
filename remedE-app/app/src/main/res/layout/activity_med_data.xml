@@ -11,15 +11,28 @@
         android:layout_height="match_parent"
         tools:context=".MedDataActivity">
 
+        <TextView
+            android:id="@+id/medicine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Medicine"
+            android:textStyle="bold"
+            android:textSize="15pt"
+            android:textColor="#018786"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/medDataCard"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/medDataCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine"
             app:cardCornerRadius="10dp"
             app:cardElevation="5dp"
             android:focusable="true"
@@ -134,7 +147,7 @@
             android:id="@+id/medDescriptionCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:focusable="true"
             android:foreground="?selectableItemBackground"
             android:padding="10dp"
@@ -178,7 +191,7 @@
             android:id="@+id/sideEffectsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:focusable="true"
             android:foreground="?selectableItemBackground"
             android:padding="10dp"
