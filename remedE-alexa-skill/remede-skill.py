@@ -286,6 +286,9 @@ class ReorderMedicinesIntentHandler(AbstractRequestHandler):
 
             speech = speech + "All the details have been sent to the card in your mobile alexa app!"
 
+	else:
+	    speech = "I will place an order for your medicines shortly when they will be running out!"
+
         return (handler_input.response_builder
                 .speak(speech)
                 .set_card(card)
