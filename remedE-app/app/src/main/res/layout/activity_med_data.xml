@@ -39,7 +39,8 @@
             android:foreground="?selectableItemBackground">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="15dp">
 
                 <TextView
                     android:id="@+id/MedName"
@@ -159,7 +160,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="15dp">
 
                 <TextView
                     android:id="@+id/basicInfo"
@@ -202,7 +204,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_margin="15dp">
 
                 <TextView
                     android:id="@+id/sideEffectsTitle"
