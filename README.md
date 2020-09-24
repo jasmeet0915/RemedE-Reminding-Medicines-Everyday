@@ -23,13 +23,13 @@ The alexa skill is a custom-hosted skill built with python using <code>ask-sdk-c
 
 ## Skill Setup Instructions:
 
-1) Create a new skill on amazon developer console and use the <code>assets/interaction_model.json</code> to create the interation model for the skill using the JSON Editor.
+1) Create a new skill on amazon developer console and use the <code>assets/interaction_model.json</code> to create the interaction model for the skill using the JSON Editor.
 
 2) Create a new python virtual environment, navigate to <code>remedE-alexa-skill</code> directory and install all the dependencies with <code>pip install -r requirements.txt</code> 
 
 3) Run the <code>remede-skill.py</code> file which runs as a flask app on port 5000 on your localhost.
 
-4) Download [ngrok](ngrok.com) and run it with protocol set to http and port number 5000.
+4) Download [ngrok](https://www.ngrok.com) and run it with protocol set to http and port number 5000.
 
 5) Copy the generated url and paste it in the https endpoint for the skill and then you are ready to test the skill.
  
