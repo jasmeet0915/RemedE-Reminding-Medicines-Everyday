@@ -7,19 +7,35 @@
     tools:context=".Patient_insertion">
 
     <EditText
+        android:id="@+id/Password_text"
+        android:layout_width="264dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="73dp"
+        android:layout_marginLeft="73dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="74dp"
+        android:layout_marginRight="74dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Address_text" />
+
+    <EditText
         android:id="@+id/Address_text"
         android:layout_width="264dp"
         android:layout_height="53dp"
         android:layout_marginStart="74dp"
         android:layout_marginLeft="74dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="73dp"
         android:layout_marginRight="73dp"
         android:ems="10"
         android:hint="Address"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Email_text" />
 
@@ -29,7 +45,7 @@
         android:layout_height="53dp"
         android:layout_marginStart="74dp"
         android:layout_marginLeft="74dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="73dp"
         android:layout_marginRight="73dp"
         android:ems="10"
@@ -46,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:layout_marginLeft="88dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="88dp"
         android:layout_marginRight="88dp"
         android:text="Welcome Patient!"
@@ -92,18 +108,18 @@
 
     <Button
         android:id="@+id/create_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="247dp"
+        android:layout_height="71dp"
         android:layout_marginStart="160dp"
         android:layout_marginLeft="160dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="21dp"
         android:layout_marginEnd="163dp"
         android:layout_marginRight="163dp"
         android:text="Create"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Address_text" />
+        app:layout_constraintTop_toBottomOf="@+id/Password_text" />
 
     <EditText
         android:id="@+id/Phone_text"
@@ -111,7 +127,7 @@
         android:layout_height="47dp"
         android:layout_marginStart="74dp"
         android:layout_marginLeft="74dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="72dp"
         android:layout_marginRight="72dp"
         android:ems="10"
@@ -124,37 +140,35 @@
 
     <EditText
         android:id="@+id/Age_text"
-        android:layout_width="262dp"
+        android:layout_width="89dp"
         android:layout_height="45dp"
         android:layout_marginStart="73dp"
         android:layout_marginLeft="73dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="73dp"
-        android:layout_marginRight="73dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
         android:ems="10"
         android:hint="Age"
         android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/Weight_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_text" />
 
     <EditText
         android:id="@+id/Weight_text"
-        android:layout_width="262dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="73dp"
-        android:layout_marginLeft="73dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="73dp"
-        android:layout_marginRight="73dp"
+        android:layout_width="122dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="78dp"
+        android:layout_marginRight="78dp"
         android:ems="10"
         android:hint="Weight"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Age_text" />
+        app:layout_constraintStart_toEndOf="@+id/Age_text"
+        app:layout_constraintTop_toBottomOf="@+id/name_text" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

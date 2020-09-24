@@ -7,7 +7,8 @@ data class User(
     var contact: Long = 0,
     var address: String = "",
     var weight: Int = 0,
-    var email: String = ""
+    var email: String = "",
+    var password: String=""
 ){
     fun getIsPatient(): Boolean? {
         return isPatient
