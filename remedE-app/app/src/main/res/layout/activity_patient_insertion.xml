@@ -131,7 +131,7 @@
                 android:layout_height="53dp"
                 android:layout_margin="15dp"
                 android:ems="10"
-                android:hint="Password"
+                android:hint="Subscriber Access Key"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
