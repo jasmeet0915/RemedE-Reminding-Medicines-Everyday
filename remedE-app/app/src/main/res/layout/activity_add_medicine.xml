@@ -42,7 +42,7 @@
             <Button
                 android:id="@+id/OpenCameraButton"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:text="OPEN CAMERA"
                 android:background="@drawable/rounded_button"
@@ -100,7 +100,7 @@
             <Button
                 android:id="@+id/AddTimeButton"
                 android:layout_width="wrap_content"
-                android:layout_height="56dp"
+                android:layout_height="50dp"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"
                 android:textColor="#ffffff"

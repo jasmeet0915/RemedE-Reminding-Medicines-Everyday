@@ -31,9 +31,10 @@
             android:layout_width="251dp"
             android:layout_height="58dp"
             android:text="Medicine Name"
+            android:textSize="15pt"
+            android:textColor="#018786"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textSize="10pt"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -42,9 +43,10 @@
             android:layout_width="251dp"
             android:layout_height="45dp"
             android:text="Next dose at: 2200hrs"
+            android:textSize="10pt"
+            android:textColor="#018786"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="7pt"
             android:gravity="center"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

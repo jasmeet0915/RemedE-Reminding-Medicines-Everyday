@@ -67,20 +67,19 @@
 
             <EditText
                 android:id="@+id/Age_text"
-                android:layout_width="89dp"
+                android:layout_width="140dp"
                 android:layout_height="45dp"
                 android:layout_margin="15dp"
                 android:layout_marginTop="12dp"
                 android:ems="10"
                 android:hint="Age"
                 android:inputType="number"
-                app:layout_constraintEnd_toStartOf="@+id/Weight_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/name_text" />
 
             <EditText
                 android:id="@+id/Weight_text"
-                android:layout_width="89dp"
+                android:layout_width="140dp"
                 android:layout_height="45dp"
                 android:layout_margin="15dp"
                 android:layout_marginTop="20dp"
@@ -88,7 +87,6 @@
                 android:hint="Weight"
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/Age_text"
                 app:layout_constraintTop_toBottomOf="@+id/name_text" />
 
             <EditText
