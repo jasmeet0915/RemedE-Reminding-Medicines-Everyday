@@ -15,9 +15,26 @@ The project also includes a **subscriber-based** mechanism which will provide re
 ## Data Flow Diagram:
 <br><br><img src="https://drive.google.com/file/d/1OQcB2jlh_dKpAJg4zEMcXSeLd1b3mjFB/view?usp=sharing" width="600"/><br>
 
-## How the Alexa Skill Works:
+## The Alexa Skill:
 
 The alexa skill is a custom-hosted skill built with python using <code>ask-sdk-core</code>  and <code>flask-ask-sdk</code>(to route the requests sent by alexa to our skill using a flask app). The endpoint for the skill is obtained by deploying it with ngrok. The skill makes use of <code>firebase_admin</code> python module to get data from firebase backend. The interaction model for the alexa skill including all the intents, their utterances, slots, slot types and dialog model can be found in <code>remede-alexa-skill/assets/interaction_model.json</code>
+
+
+
+## Skill Setup Instructions:
+
+1) Create a new skill on amazon developer console and use the <code>assets/interaction_model.json</code> to create the interation model for the skill using the JSON Editor.
+
+2) Create a new python virtual environment, navigate to <code>remedE-alexa-skill</code> directory and install all the dependencies with <code>pip install -r requirements.txt</code> 
+
+3) Run the <code>remede-skill.py</code> file which runs as a flask app on port 5000 on your localhost.
+
+4) Download [ngrok](ngrok.com) and run it with protocol set to http and port number 5000.
+
+5) Copy the generated url and paste it in the https endpoint for the skill and then you are ready to test the skill.
+ 
+
+## How the Skill Works:
 
 1) **LaunchRequest Intent**:
 The LaunchRequest Intent invokes when the user says *"Launch Remedy Helper"*. This intent is handled by <code>LaunchRequestHandler</code> which returns a JSON response to alexa cloud with a welcome message including a brief description of the skill and how to begin.
