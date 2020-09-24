@@ -24,7 +24,7 @@ public class Patient_insertion extends AppCompatActivity {
     DatabaseReference rootRef, demoRef;
     Button insertion;
     User push;        //object to be pushed to firebase
-    EditText e1,e2,e3,e4,e5,e6;
+    EditText e1,e2,e3,e4,e5,e6,e7;
     String uniqueKey;
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "mypref";
@@ -55,7 +55,7 @@ public class Patient_insertion extends AppCompatActivity {
             e4=findViewById(R.id.Phone_text);
             e5=findViewById(R.id.Email_text);
             e6=findViewById(R.id.Address_text);
-
+            e7=findViewById(R.id.Password_text);
             insert_data();
       }
     }
@@ -68,6 +68,7 @@ public class Patient_insertion extends AppCompatActivity {
         push.setAge(Integer.parseInt(e2.getText().toString()));
         push.setWeight(Integer.parseInt(e3.getText().toString()));
         push.setContact(Long.parseLong(e4.getText().toString()));
+        push.setPassword(e7.getText().toString());
         push.setPatient(true);
     }
     public void insert_data(){
