@@ -29,7 +29,7 @@
         <TextView
             android:id="@+id/medName"
             android:layout_width="251dp"
-            android:layout_height="58dp"
+            android:layout_height="wrap_content"
             android:text="Medicine Name"
             android:textSize="10pt"
             android:textColor="#018786"
@@ -41,13 +41,31 @@
         <TextView
             android:id="@+id/nextDose"
             android:layout_width="251dp"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:text="Next dose at: 2200hrs"
             android:textSize="7pt"
             android:textColor="#018786"
+            app:layout_constraintTop_toBottomOf="@id/medName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="center"/>
+
+        <Switch
+            android:id="@+id/takenSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Dose Taken"
+            android:textColor="#018786"
+            android:textSize="7pt"
+            android:textOff="No"
+            android:textOn="Yes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.603"
+            app:layout_constraintStart_toEndOf="@id/pillIcon"
+            app:layout_constraintTop_toBottomOf="@id/nextDose"
+            app:layout_constraintVertical_bias="0.09" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
