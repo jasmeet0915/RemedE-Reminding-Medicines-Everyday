@@ -9,6 +9,9 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.remede.model.User
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_user_acc.*
 
 class RecyclerAdapter(private val medNames: List<String>,
                       private val nextDose: List<String>,
@@ -22,6 +25,14 @@ class RecyclerAdapter(private val medNames: List<String>,
         val pillImage: ImageView = itemView.findViewById(R.id.pillIcon)
         val takenSwitch: Switch = itemView.findViewById(R.id.takenSwitch)
 
+        private var dataReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Patients")
+        private var userReference: DatabaseReference = dataReference.child(userKey.toString())
+        private var medicineReference: DatabaseReference = userReference.child("medicines")
+
+        private var userListener: ValueEventListener? = null
+        private var medicineListener: ValueEventListener? = null
+
+
         init {
             itemView.setOnClickListener{v: View ->
                 val intent = Intent(v.context, MedDataActivity::class.java)
@@ -34,14 +45,16 @@ class RecyclerAdapter(private val medNames: List<String>,
         }
         init{
             takenSwitch.setOnCheckedChangeListener{ _ , isChecked ->
-                val message = isChecked
-                if (isChecked){
-                    Log.i("RecyclerAdapter", "medicine taken")
+                if (isChecked) {
+                    Log.i("RecyclerAdapter", "${medicineNames[position]} taken")
+                    var hour: String = itemNextDose.text.toString().split(':')[1].substring(1)
+                    var minute: String = itemNextDose.text.toString().split(':')[2]
+                    var time = hour + ":" + minute
+                    medicineReference.child(medicineKeys[position] + "/times/" + time)
+                        .setValue(true)
+                    }
                 }
-            }
-
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
