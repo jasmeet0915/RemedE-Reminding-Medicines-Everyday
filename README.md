@@ -13,7 +13,7 @@ The project also includes a **subscriber-based** mechanism which will provide re
 </ol>
 
 ## Data Flow Diagram:
-<br><br><img src="https://drive.google.com/file/d/1OQcB2jlh_dKpAJg4zEMcXSeLd1b3mjFB/view?usp=sharing" width="600"/><br>
+<img src="https://user-images.githubusercontent.com/23265149/94280303-dbf36880-ff6a-11ea-939a-dc2f4bc25de7.jpg" width="600"/>
 
 ## The Alexa Skill:
 
