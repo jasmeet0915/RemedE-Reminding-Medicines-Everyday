@@ -15,6 +15,15 @@ The project also includes a **subscriber-based** mechanism which will provide re
 ## Data Flow Diagram:
 <img src="https://user-images.githubusercontent.com/23265149/94280303-dbf36880-ff6a-11ea-939a-dc2f4bc25de7.jpg" width="600"/>
 
+## The App:
+
+<img src="https://user-images.githubusercontent.com/23265149/94281834-bff0c680-ff6c-11ea-97f5-ee387bf88571.jpg" width="300"/>         <img src="https://user-images.githubusercontent.com/23265149/94282293-43121c80-ff6d-11ea-9bb3-a946dec13809.jpg" width="300"/><br>
+<img src="https://user-images.githubusercontent.com/23265149/94282361-5cb36400-ff6d-11ea-942f-f8ea56dc01fd.jpg" width="300"/> <img src="https://user-images.githubusercontent.com/23265149/94282757-d2b7cb00-ff6d-11ea-9b03-512539b75b36.jpg" width="300"/><br>
+<img src="https://user-images.githubusercontent.com/23265149/94283032-24f8ec00-ff6e-11ea-81d3-3d4b5f1e89ff.jpg" width="300"/> <img src="https://user-images.githubusercontent.com/23265149/94282911-0266d300-ff6e-11ea-9e3f-1054b9ff475f.jpg" width="300"/><br>
+<img src="https://user-images.githubusercontent.com/23265149/94283125-3fcb6080-ff6e-11ea-9654-bb452c56075c.jpg" width="300"/> <img src="https://user-images.githubusercontent.com/23265149/94283120-3e9a3380-ff6e-11ea-84ce-75930dbf0a77.jpg" width="300"/>
+
+
+
 ## The Alexa Skill:
 
 The alexa skill is a custom-hosted skill built with python using <code>ask-sdk-core</code>  and <code>flask-ask-sdk</code>(to route the requests sent by alexa to our skill using a flask app). The endpoint for the skill is obtained by deploying it with ngrok. The skill makes use of <code>firebase_admin</code> python module to get data from firebase backend. The interaction model for the alexa skill including all the intents, their utterances, slots, slot types and dialog model can be found in <code>remede-alexa-skill/assets/interaction_model.json</code>
