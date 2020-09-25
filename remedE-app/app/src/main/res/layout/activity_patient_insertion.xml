@@ -67,7 +67,7 @@
 
             <EditText
                 android:id="@+id/Age_text"
-                android:layout_width="140dp"
+                android:layout_width="130dp"
                 android:layout_height="45dp"
                 android:layout_margin="15dp"
                 android:layout_marginTop="12dp"
@@ -79,7 +79,7 @@
 
             <EditText
                 android:id="@+id/Weight_text"
-                android:layout_width="140dp"
+                android:layout_width="130dp"
                 android:layout_height="45dp"
                 android:layout_margin="15dp"
                 android:layout_marginTop="20dp"

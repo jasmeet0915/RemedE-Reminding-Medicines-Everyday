@@ -88,7 +88,7 @@
 
             <EditText
                 android:id="@+id/EnterTime"
-                android:layout_width="wrap_content"
+                android:layout_width="169dp"
                 android:layout_height="56dp"
                 android:layout_margin="15dp"
                 android:ems="10"
@@ -99,7 +99,7 @@
 
             <Button
                 android:id="@+id/AddTimeButton"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="50dp"
                 android:layout_margin="15dp"
                 android:background="@drawable/rounded_button"

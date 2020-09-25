@@ -185,7 +185,7 @@
 
         <Button
             android:id="@+id/addMedButton"
-            android:layout_width="264dp"
+            android:layout_width="234dp"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:padding="10dp"
@@ -200,7 +200,7 @@
 
         <Button
             android:id="@+id/logout_button"
-            android:layout_width="110dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:padding="10dp"
