@@ -107,7 +107,14 @@ class UserAccountActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     val med = snapshot.getValue(Medicine::class.java)
                     medNames.add(med?.name.toString())
-                    nextDose.add("Upcoming dose at: " + Utils.getNextDose(med!!.times))
+                    //nextDose.add("Upcoming dose at: " + Utils.getNextDose(med!!.times))
+                    nextDose.add(if(Utils.getNextDose(med!!.times).isEmpty()) {
+                                        "No Upcoming Dose"
+                                }
+                                else{
+                                        "Upcoming dose at: " + Utils.getNextDose(med!!.times)
+                                }
+                    )
                     iconsList = Collections.nCopies(medNames.size, R.mipmap.ic_pill)
                     medKeys.add(snapshot.key.toString())
 //                    nextDose=Collections.nCopies(medNames.size,"jassu")
