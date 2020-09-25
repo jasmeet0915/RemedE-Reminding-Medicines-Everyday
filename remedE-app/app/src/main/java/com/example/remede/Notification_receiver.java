@@ -31,12 +31,18 @@ public class Notification_receiver extends BroadcastReceiver {
 
 
         String Medicine_Name=intent.getStringExtra("key");
+        String uniqueKey=intent.getStringExtra("user_key");
+        if(uniqueKey=="")
+            uniqueKey="-MI44N384kav1QggJmk1";
+        Log.w("prabhkeyNR",uniqueKey);
+
         Log.w("Notification",Medicine_Name);
 
 
 
-        Intent repeating_intent = new Intent(context, Repeating_activity.class);
+        Intent repeating_intent = new Intent(context, UserAccountActivity.class);
 
+        repeating_intent.putExtra("key",uniqueKey);
         repeating_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context,100,repeating_intent,PendingIntent.FLAG_UPDATE_CURRENT);

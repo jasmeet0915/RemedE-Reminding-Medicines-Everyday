@@ -125,6 +125,9 @@ public class AddMedicineActivity extends AppCompatActivity {
                 calendar.set(Calendar.SECOND,15);
                 Intent intent2 = new Intent(getApplicationContext(), Notification_receiver.class);
                 intent2.putExtra("key",e1.getText().toString());
+                intent2.putExtra("user_key",previousKey);
+                Log.w("prabhkeyAMA",previousKey);
+
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,intent2,PendingIntent.FLAG_UPDATE_CURRENT );
 
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -19,7 +19,6 @@
         <activity android:name=".AddMedicineActivity" />
         <activity android:name=".UserAccountActivity" />
         <activity android:name=".Patient_insertion" />
-        <activity android:name=".Repeating_activity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

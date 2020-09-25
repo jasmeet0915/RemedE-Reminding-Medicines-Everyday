@@ -13,7 +13,6 @@ import com.example.remede.model.Medicine
 import com.example.remede.model.User
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_user_acc.*
-import java.time.LocalTime
 import java.util.*
 
 
@@ -47,6 +46,8 @@ class UserAccountActivity : AppCompatActivity() {
         // get user key from previous activity
         val bundle: Bundle? = intent.extras
         var uniqueKey = bundle?.getString("key")
+        Log.w("prabhkeyUAA", uniqueKey!!.toString())
+
         //initialize dataReference, userReference, medicineReference
         dataReference = FirebaseDatabase.getInstance().getReference("Patients")
         userReference = dataReference.child(uniqueKey.toString())
@@ -113,7 +114,13 @@ class UserAccountActivity : AppCompatActivity() {
                     Log.i(TAG, "${medNames}")
                     Log.i(TAG, "${nextDose}")
                     Log.i(TAG, "${medKeys}")
-                    medRecyclerView.adapter = RecyclerAdapter(medNames, nextDose, iconsList, medKeys, uniqueKey.toString())
+                    medRecyclerView.adapter = RecyclerAdapter(
+                        medNames,
+                        nextDose,
+                        iconsList,
+                        medKeys,
+                        uniqueKey.toString()
+                    )
                 }
             }
 
